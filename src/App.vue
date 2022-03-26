@@ -1,15 +1,13 @@
-<script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-
-</script>
-
 <template>
-  <h1 class="text-3xl font-bold underline">
-   Pokedex
-  </h1>
+  <div class="flex items-center justify-center flex-col">
+    <h1 class="mt-10"><img :src="PokedexLogo"></h1>
+
+   <PokemonList />
+  </div>
 </template>
 
-<style>
+<script setup lang="ts">
+import PokemonList from './components/PokemonList/index.vue';
+import PokedexLogo from './assets/pokedex_logo.png'
 
-</style>
+</script>
