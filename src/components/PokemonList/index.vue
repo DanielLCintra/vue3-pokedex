@@ -2,16 +2,14 @@
   <div class="w-full py-10 px-10">
     <ul class="grid grid-cols-4 gap-4">
       <li v-for="(pokemon, index) in pokemonsList" :key="index" class="mb-10">
-        <div class="max-w-sm rounded overflow-hidden shadow-lg cursor-pointer">
-          <img class="w-full" :src="getPokemonImage(index)" alt="" />
-          <div class="px-6 py-4">
-            <div class="font-bold text-xl mb-2">{{ pokemon?.name }}</div>
-          </div>
-        </div>
+        <PokemonCard :pokemon="pokemon" />
       </li>
     </ul>
 
-    <div v-if="pagination.totalItems !== 0" class="w-full py-5 px-5 flex items-center justify-center">
+    <div
+      v-if="pagination.totalItems !== 0"
+      class="w-full py-5 px-5 flex items-center justify-center"
+    >
       <VuePaginationTw
         :total-items="pagination.totalItems"
         :current-page="pagination.currentPage"
@@ -24,24 +22,30 @@
   </div>
 </template>
 
+<script lang="ts">
+export default {
+  name: "PokemonList",
+};
+</script>
+
 <script setup lang="ts">
 import { onMounted, ref, watchEffect, reactive } from "vue";
 import { pokeApi } from "../../services/pokeApi";
 import Pokemon from "../../types/Pokemon";
+import PokemonCard from "../PokemonCard/index.vue";
 import Pagination from "../../types/Pagination";
 import "vue-pagination-tw/styles";
 import VuePaginationTw from "vue-pagination-tw";
 
 const pokemonsList = ref<Pokemon[]>([]);
 
-const {pagination} = reactive({ 
+const { pagination } = reactive({
   pagination: {
     totalItems: 0,
     currentPage: 1,
     perPage: 12,
   },
-})
-
+});
 
 const getPokemonDetails = async (pokemon: Pokemon) => {
   try {
@@ -61,30 +65,44 @@ const getPokemonDetails = async (pokemon: Pokemon) => {
 
 const getPokemons = async () => {
   try {
-    const { data, status } = await pokeApi.get(`pokemon?offset=${pagination.currentPage - 1}&limit=${pagination.perPage}`);
+    const { data, status } = await pokeApi.get(
+      `pokemon?offset=${pagination.currentPage - 1}&limit=${pagination.perPage}`
+    );
 
     if (status == 200) {
-      console.log('data', data)
-      pokemonsList.value = [...data.results];
-      pagination.totalItems = data.count;
+      console.log("data", data);
+      pokemonsList.value = [];
+      pagination.totalItems = 0;
+      setTimeout(() => {
+        
+        pokemonsList.value = data.results.map(
+          (pokemon: Pokemon, index: number) => {
+            const id = pokemon.url.split("/")[6];
+            return {
+            ...pokemon,
+            image: getPokemonImage(id),
+          }}
+        );
+        pagination.totalItems = data.count;
+      }, [1000]);
     }
   } catch (error) {
     console.log("Houve um ou mais erros ao consultar a lista de pokemons");
   }
 };
 
-const getPokemonImage = (id: number) =>
+const getPokemonImage = (id: string) =>
   `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
-    id+1
+    id
   }.png`;
 
 const paginate = (page: number) => {
   pagination.currentPage = page;
 };
 
-watchEffect(()=> {
-  getPokemons()
-})
+watchEffect(() => {
+  getPokemons();
+});
 
 onMounted(() => {
   getPokemons();
