@@ -14,6 +14,10 @@ Olá, seja bem vindo ao projeto pokedex app.
 
 ![My image](https://daniellcintra.github.io/images/pokedex-app.png)
 
+## Demonstração
+[Visualizar](https://pokedex-d.herokuapp.com/)
+
+
 ## Instalação do Projeto
 ```
 yarn
