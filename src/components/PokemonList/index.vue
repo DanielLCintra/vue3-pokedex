@@ -12,7 +12,7 @@
 
       <ul v-if="pokemonsList.length !== 0" class=" w-full grid grid-cols-4 gap-4 px-10">
         <li v-for="(pokemon, index) in pokemonsList" :key="index" class="mb-10">
-          <PokemonCard :pokemon="pokemon" @show-pokemon-details="(pokemon) => getPokemonDetails(pokemon)"/>
+          <PokemonCard :pokemon="pokemon" @show-pokemon-details="(pokemon: Pokemon) => getPokemonDetails(pokemon)"/>
         </li>
       </ul>
 
@@ -103,7 +103,7 @@ const getPokemons = async () => {
           }}
         );
         pagination.totalItems = data.count;
-      }, [1000]);
+      }, 1000);
     }
   } catch (error) {
     console.log("Houve um ou mais erros ao consultar a lista de pokemons");
