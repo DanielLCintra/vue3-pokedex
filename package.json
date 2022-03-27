@@ -3,10 +3,10 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
+    "start": "vite --port $PORT",
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "postinstall": "yarn build"
+    "serve": "vite preview"
   },
   "dependencies": {
     "autoprefixer": "^10.4.4",
