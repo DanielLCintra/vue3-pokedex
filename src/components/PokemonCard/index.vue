@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-sm rounded overflow-hidden shadow-lg cursor-pointer">
+  <div class="max-w-sm rounded overflow-hidden shadow-lg cursor-pointer" @click="$emit('showPokemonDetails', pokemon)">
     <img class="w-full" :src="pokemon.image" alt="" />
     <div class="px-6 py-4">
       <div class="font-bold text-xl mb-2">{{ pokemon?.name }}</div>
@@ -14,7 +14,9 @@
 </script>
 
 <script setup lang="ts">
-      const props = defineProps(['pokemon'])
-</script>
+  import Pokemon from '../../types/Pokemon';
 
-<style></style>
+  const props = defineProps<{
+    pokemon: Pokemon
+  }>()
+</script>

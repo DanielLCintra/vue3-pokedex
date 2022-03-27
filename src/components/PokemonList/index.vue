@@ -1,27 +1,34 @@
 <template>
-  <div class="w-full py-10 px-10">
-    <div v-if="pagination.totalItems === 0">
-      <img :src="PokemonLoading"/>
+  <div>
+    <PokemonDetails :pokemon='currentPokemon' :isHidden='!showModalPokemonDetails' @close="showModalPokemonDetails = false"/>
+    <div class="flex items-center justify-center flex-col">
+    <div class="my-10">
+      <img :src="PokedexLogo">
     </div>
 
-    <ul v-if="pokemonsList.length !== 0" class="grid grid-cols-4 gap-4">
-      <li v-for="(pokemon, index) in pokemonsList" :key="index" class="mb-10">
-        <PokemonCard :pokemon="pokemon" />
-      </li>
-    </ul>
+      <div v-if="pagination.totalItems === 0">
+        <img :src="PokemonLoading"/>
+      </div>
 
-    <div
-      v-if="pagination.totalItems !== 0"
-      class="w-full py-5 px-5 flex items-center justify-center"
-    >
-      <VuePaginationTw
-        :total-items="pagination.totalItems"
-        :current-page="pagination.currentPage"
-        :per-page="pagination.perPage"
-        @page-changed="paginate"
-        :go-button="false"
-        styled="centered"
-      />
+      <ul v-if="pokemonsList.length !== 0" class=" w-full grid grid-cols-4 gap-4 px-10">
+        <li v-for="(pokemon, index) in pokemonsList" :key="index" class="mb-10">
+          <PokemonCard :pokemon="pokemon" @show-pokemon-details="(pokemon) => getPokemonDetails(pokemon)"/>
+        </li>
+      </ul>
+
+      <div
+        v-if="pagination.totalItems !== 0"
+        class="w-full py-5 px-5 flex items-center justify-center"
+      >
+        <VuePaginationTw
+          :total-items="pagination.totalItems"
+          :current-page="pagination.currentPage"
+          :per-page="pagination.perPage"
+          @page-changed="paginate"
+          :go-button="false"
+          styled="centered"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -41,6 +48,8 @@ import PokemonLoading from "../../assets/pokemon_loading.gif";
 import Pagination from "../../types/Pagination";
 import "vue-pagination-tw/styles";
 import VuePaginationTw from "vue-pagination-tw";
+import PokemonDetails from "../PokemonDetails/index.vue";
+import PokedexLogo from '../../assets/pokedex_logo.png'
 
 const pokemonsList = ref<Pokemon[]>([]);
 
@@ -49,8 +58,11 @@ const { pagination } = reactive({
     totalItems: 0,
     currentPage: 1,
     perPage: 12,
-  },
+  }
 });
+
+let currentPokemon = ref<Pokemon>({});
+let showModalPokemonDetails = ref(false);
 
 const getPokemonDetails = async (pokemon: Pokemon) => {
   try {
@@ -59,7 +71,8 @@ const getPokemonDetails = async (pokemon: Pokemon) => {
     const { data, status } = await pokeApi.get(`pokemon/${id}`);
 
     if (status == 200) {
-      return data;
+      currentPokemon.value = {...pokemon, ...data};
+      showModalPokemonDetails.value = true;
     } else {
       return {};
     }
@@ -85,6 +98,7 @@ const getPokemons = async () => {
             const id = pokemon.url.split("/")[6];
             return {
             ...pokemon,
+            id: id,
             image: getPokemonImage(id),
           }}
         );
