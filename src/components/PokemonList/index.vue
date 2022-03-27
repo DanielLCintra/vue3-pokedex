@@ -57,7 +57,7 @@ const { pagination } = reactive({
   pagination: {
     totalItems: 0,
     currentPage: 1,
-    perPage: 4,
+    perPage: 8,
   }
 });
 
