@@ -61,7 +61,7 @@ const { pagination } = reactive({
   }
 });
 
-let currentPokemon = ref<Pokemon>({});
+let currentPokemon = ref<Pokemon>();
 let showModalPokemonDetails = ref(false);
 
 const getPokemonDetails = async (pokemon: Pokemon) => {
