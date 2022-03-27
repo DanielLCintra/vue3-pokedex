@@ -1,6 +1,10 @@
 <template>
   <div class="w-full py-10 px-10">
-    <ul class="grid grid-cols-4 gap-4">
+    <div v-if="pagination.totalItems === 0">
+      <img :src="PokemonLoading"/>
+    </div>
+
+    <ul v-if="pokemonsList.length !== 0" class="grid grid-cols-4 gap-4">
       <li v-for="(pokemon, index) in pokemonsList" :key="index" class="mb-10">
         <PokemonCard :pokemon="pokemon" />
       </li>
@@ -33,6 +37,7 @@ import { onMounted, ref, watchEffect, reactive } from "vue";
 import { pokeApi } from "../../services/pokeApi";
 import Pokemon from "../../types/Pokemon";
 import PokemonCard from "../PokemonCard/index.vue";
+import PokemonLoading from "../../assets/pokemon_loading.gif";
 import Pagination from "../../types/Pagination";
 import "vue-pagination-tw/styles";
 import VuePaginationTw from "vue-pagination-tw";

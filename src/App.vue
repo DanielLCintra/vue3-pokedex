@@ -10,4 +10,6 @@
 import PokemonList from './components/PokemonList/index.vue';
 import PokedexLogo from './assets/pokedex_logo.png'
 
+
+
 </script>
